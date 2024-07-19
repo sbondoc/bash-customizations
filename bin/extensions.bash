@@ -8,5 +8,5 @@ do
     [ -r "${f}" ] && . "${f}"
 done 0<<EOF
 ${HOME}/.bashrc
-${XDG_CONFIG_HOME}/bash/src/extensions/prompt.bash
+${XDG_CONFIG_HOME}/bash/src/prompt.bash
 EOF
