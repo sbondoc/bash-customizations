@@ -1,12 +1,8 @@
-export XDG_DATA_HOME="${HOME}/.local/share"
-export XDG_CONFIG_HOME="${HOME}/.local/etc"
-export XDG_STATE_HOME="${HOME}/.local/var/lib"
-export XDG_CACHE_HOME="${HOME}/.local/var/cache"
-
 while read f
 do
-    . "${XDG_CONFIG_HOME}/bash/${f}"
+    . "${XDG_CONFIG_HOME:-"${HOME}/.local/etc"}/bash/${f}"
 done 0<<EOF
+src/xdg.sh
 lib/.bashrc
 src/prompt.bash
 EOF
