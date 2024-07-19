@@ -5,8 +5,8 @@ export XDG_CACHE_HOME="${HOME}/.local/var/cache"
 
 while read f
 do
-    [ -r "${f}" ] && . "${f}"
+    . "${XDG_CONFIG_HOME}/bash/${f}"
 done 0<<EOF
-${HOME}/.bashrc
-${XDG_CONFIG_HOME}/bash/src/prompt.bash
+lib/.bashrc
+src/prompt.bash
 EOF

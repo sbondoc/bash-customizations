@@ -1,11 +1,6 @@
 if ! command -v __git_ps1 1>/dev/null
 then
-    if [ -r /usr/lib/git-core/git-sh-prompt ]
-    then
-        . /usr/lib/git-core/git-sh-prompt
-    else
-        return 1
-    fi
+    . "${XDG_CONFIG_HOME}/bash/lib/git-sh-prompt"
 fi
 
 export GIT_PS1_SHOWCOLORHINTS=true
