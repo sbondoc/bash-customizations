@@ -3,13 +3,10 @@ export XDG_CONFIG_HOME="${HOME}/.local/etc"
 export XDG_STATE_HOME="${HOME}/.local/var/lib"
 export XDG_CACHE_HOME="${HOME}/.local/var/cache"
 
-if [ -d "${XDG_CONFIG_HOME}"/bash/src/extensions ]
-then
-    for ext in sh bash
-    do
-        for f in "${XDG_CONFIG_HOME}"/bash/src/extensions/*.${ext}
-        do
-            [ -r "${f}" ] && . "${f}"
-	done
-    done
-fi
+while read f
+do
+    [ -r "${f}" ] && . "${f}"
+done 0<<EOF
+${HOME}/.bashrc
+${XDG_CONFIG_HOME}/bash/src/extensions/prompt.bash
+EOF
