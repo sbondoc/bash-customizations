@@ -69,9 +69,14 @@ __ps1_replace()
 
 len_var=40
 len_dir_max=$((${len_var} / 2))
-if [ ${#PWD} -le ${len_dir_max} ]
+dir_name="${PWD#${HOME}}"
+if [ ${#PWD} -ne ${#dir_name} ]
 then
-    len_dir=${#PWD}
+    dir_name="~${dir_name}"
+fi
+if [ ${#dir_name} -le ${len_dir_max} ]
+then
+    len_dir=${#dir_name}
 else
     len_dir=${len_dir_max}
 fi
@@ -91,7 +96,7 @@ then
 else
     len_branch=${len_branch_max}
 fi
-__ps1_trunc tail ${len_dir} "${PWD}"
+__ps1_trunc tail ${len_dir} "${dir_name}"
 printf "%s" "${__PS1_TRUNC_OUT_ELLIPSIS}"
 printf "%s" "\[\e[01;34m\]"
 printf "%s" "${__PS1_TRUNC_OUT}"
