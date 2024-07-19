@@ -66,34 +66,34 @@ __ps1()
 {
     len_var=${1}
     len_dir_max=$((${len_var} / 2))
-    dir_name="${PWD#${HOME}}"
-    if [ ${#PWD} -ne ${#dir_name} ]
+    name_dir="${PWD#${HOME}}"
+    if [ ${#PWD} -ne ${#name_dir} ]
     then
-        dir_name="~${dir_name}"
+        name_dir="~${name_dir}"
     fi
-    if [ ${#dir_name} -le ${len_dir_max} ]
+    if [ ${#name_dir} -le ${len_dir_max} ]
     then
-        len_dir=${#dir_name}
+        len_dir=${#name_dir}
     else
         len_dir=${len_dir_max}
     fi
     len_branch_max=$((${len_var} - ${len_dir}))
     unset __git_ps1_branch_name
     __git_ps1 "" "" "%s"
-    branch_name=${__git_ps1_branch_name}
-    if [ $((${#branch_name} + 1)) -le ${len_branch_max} ]
+    name_branch=${__git_ps1_branch_name}
+    if [ $((${#name_branch} + 1)) -le ${len_branch_max} ]
     then
-        if [ -z ${branch_name} ]
+        if [ -z ${name_branch} ]
         then
             len_branch=0
         else
-            len_branch=$((${#branch_name} + 1))
+            len_branch=$((${#name_branch} + 1))
         fi
         len_dir=$((${len_var} - ${len_branch}))
     else
         len_branch=${len_branch_max}
     fi
-    __ps1_trunc tail ${len_dir} "${dir_name}"
+    __ps1_trunc tail ${len_dir} "${name_dir}"
     printf "%s" "${__PS1_TRUNC_OUT_ELLIPSIS}"
     printf "%s" "\[\e[01;34m\]"
     printf "%s" "${__PS1_TRUNC_OUT}"
@@ -101,7 +101,7 @@ __ps1()
     if [ ${len_branch} -gt 0 ]
     then
         printf ":"
-        __ps1_trunc head $((${len_branch} - 1)) ${branch_name}
+        __ps1_trunc head $((${len_branch} - 1)) ${name_branch}
         case "${PS1}" in
         ("\\[\\e[31m\\]"*)
             printf "%s" "\[\e[31m\]"
