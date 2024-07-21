@@ -77,7 +77,7 @@ __ps1_print_color()
 
 __ps1()
 {
-    len_var=${1}
+    len_var=$((${1} - 2))
     len_dir_max=$((${len_var} / 2))
     name_dir="${PWD#${HOME}}"
     if [ ${#PWD} -ne ${#name_dir} ]
