@@ -1,61 +1,61 @@
-__ps1_trunc()
+trunc()
 {
     str=${3}
     if [ ${#str} -le ${2} ]
     then
-        __PS1_TRUNC_OUT_ELLIPSIS=
-        __PS1_TRUNC_OUT=${str}
+        trunc_out_ellipsis=
+        trunc_out=${str}
         unset str
         return
     fi
-    __PS1_TRUNC_OUT_ELLIPSIS=...
+    trunc_out_ellipsis=...
     q=
-    while [ ${#q} -lt $((${2} - ${#__PS1_TRUNC_OUT_ELLIPSIS})) ]
+    while [ ${#q} -lt $((${2} - ${#trunc_out_ellipsis})) ]
     do
         q="${q}?"
     done
     case ${1} in
     (head)
-        __PS1_TRUNC_OUT=${str%${str#${q}}}
+        trunc_out=${str%${str#${q}}}
     ;;
     (tail)
-        __PS1_TRUNC_OUT=${str#${str%${q}}}
+        trunc_out=${str#${str%${q}}}
     ;;
     esac
     unset q
     unset str
 }
 
-__ps1_replace()
+replace()
 {
     if [ -z "${1}" ]
     then
-        __PS1_REPLACE_OUT=
+        replace_out=
         return
     fi
     if [ -z "${2}" ]
     then
-        __PS1_REPLACE_OUT="${1}"
+        replace_out="${1}"
         return
     fi
     right=${1}
-    __PS1_REPLACE_OUT=
+    replace_out=
     while [ -n "${right}" ]
     do
         left=${right%%${2}*}
         if [ "${left}" = "${right}" ]
         then
-            __PS1_REPLACE_OUT=${__PS1_REPLACE_OUT}${right}
+            replace_out=${replace_out}${right}
             return
         fi
-        __PS1_REPLACE_OUT=${__PS1_REPLACE_OUT}${left}${3}
+        replace_out=${replace_out}${left}${3}
         right=${right#*${2}}
     done
     unset left
     unset right
 }
 
-__ps1_print_color()
+print_color()
 {
     printf "\["
     case ${1} in
@@ -75,7 +75,7 @@ __ps1_print_color()
     printf "\]"
 }
 
-__ps1()
+main()
 {
     len_var=$((${1} - 2))
     len_dir_max=$((${len_var} / 2))
@@ -106,28 +106,28 @@ __ps1()
     else
         len_branch=${len_branch_max}
     fi
-    __ps1_trunc tail ${len_dir} "${name_dir}"
-    printf "%s" "${__PS1_TRUNC_OUT_ELLIPSIS}"
-    __ps1_print_color bblue
-    printf "%s" "${__PS1_TRUNC_OUT}"
-    __ps1_print_color none
+    trunc tail ${len_dir} "${name_dir}"
+    printf "%s" "${trunc_out_ellipsis}"
+    print_color bblue
+    printf "%s" "${trunc_out}"
+    print_color none
     if [ ${len_branch} -gt 0 ]
     then
         printf ":"
-        __ps1_trunc head $((${len_branch} - 1)) ${name_branch}
+        trunc head $((${len_branch} - 1)) ${name_branch}
         case "${PS1}" in
         ("\\[\\e[31m\\]"*)
-            __ps1_print_color red
+            print_color red
         ;;
         ("\\[\\e[32m\\]"*)
-            __ps1_print_color green
+            print_color green
         ;;
         esac
-        printf "%s" "${__PS1_TRUNC_OUT}"
-        __ps1_print_color none
-        printf "%s" "${__PS1_TRUNC_OUT_ELLIPSIS}"
+        printf "%s" "${trunc_out}"
+        print_color none
+        printf "%s" "${trunc_out_ellipsis}"
     fi
     printf "%s" "\$ "
 }
 
-__ps1 40
+main 40
