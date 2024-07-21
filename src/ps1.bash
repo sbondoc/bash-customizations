@@ -26,35 +26,6 @@ trunc()
     unset str
 }
 
-replace()
-{
-    if [ -z "${1}" ]
-    then
-        replace_out=
-        return
-    fi
-    if [ -z "${2}" ]
-    then
-        replace_out="${1}"
-        return
-    fi
-    right=${1}
-    replace_out=
-    while [ -n "${right}" ]
-    do
-        left=${right%%${2}*}
-        if [ "${left}" = "${right}" ]
-        then
-            replace_out=${replace_out}${right}
-            return
-        fi
-        replace_out=${replace_out}${left}${3}
-        right=${right#*${2}}
-    done
-    unset left
-    unset right
-}
-
 print_color()
 {
     printf "\["
