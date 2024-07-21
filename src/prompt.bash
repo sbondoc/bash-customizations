@@ -62,6 +62,26 @@ __ps1_replace()
     unset right
 }
 
+__ps1_print_color()
+{
+    printf "\["
+    case ${1} in
+    (red)
+        printf "\e[31m"
+    ;;
+    (green)
+        printf "\e[32m"
+    ;;
+    (bblue)
+        printf "\e[1;34m"
+    ;;
+    (none)
+        printf "\e[00m"
+    ;;
+    esac
+    printf "\]"
+}
+
 __ps1()
 {
     len_var=${1}
@@ -95,26 +115,23 @@ __ps1()
     fi
     __ps1_trunc tail ${len_dir} "${name_dir}"
     printf "%s" "${__PS1_TRUNC_OUT_ELLIPSIS}"
-    printf "%s" "\[\e[01;34m\]"
+    __ps1_print_color bblue
     printf "%s" "${__PS1_TRUNC_OUT}"
-    printf "%s" "\[\e[00m\]"
+    __ps1_print_color none
     if [ ${len_branch} -gt 0 ]
     then
         printf ":"
         __ps1_trunc head $((${len_branch} - 1)) ${name_branch}
         case "${PS1}" in
         ("\\[\\e[31m\\]"*)
-            printf "%s" "\[\e[31m\]"
+            __ps1_print_color red
         ;;
         ("\\[\\e[32m\\]"*)
-            printf "%s" "\[\e[32m\]"
-        ;;
-        (*)
-            printf "%s" "\[\e[00m\]"
+            __ps1_print_color green
         ;;
         esac
         printf "%s" "${__PS1_TRUNC_OUT}"
-        printf "%s" "\[\e[00m\]"
+        __ps1_print_color none
         printf "%s" "${__PS1_TRUNC_OUT_ELLIPSIS}"
     fi
     printf "%s" "\$ "
