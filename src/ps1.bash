@@ -33,13 +33,13 @@ print_ansi()
 
 main()
 {
-    len_var=$((${1} - 2))
-    len_dir_max=$((${len_var} / 2))
+    readonly len_var=$((${1} - 2))
+    readonly len_dir_max=$((${len_var} / 2))
     if [ "${PWD}" = "${PWD#${HOME}}" ]
     then
-        name_dir="${PWD}"
+        readonly name_dir="${PWD}"
     else
-        name_dir="~${PWD#${HOME}}"
+        readonly name_dir="~${PWD#${HOME}}"
     fi
     if [ ${#name_dir} -le ${len_dir_max} ]
     then
@@ -47,22 +47,23 @@ main()
     else
         len_dir=${len_dir_max}
     fi
-    len_branch_max=$((${len_var} - ${len_dir}))
+    readonly len_branch_max=$((${len_var} - ${len_dir}))
     unset __git_ps1_branch_name
     __git_ps1 '' '' '%s'
-    name_branch=${__git_ps1_branch_name}
+    readonly name_branch=${__git_ps1_branch_name}
     if [ $((${#name_branch} + 1)) -le ${len_branch_max} ]
     then
         if [ -z ${name_branch} ]
         then
-            len_branch=0
+            readonly len_branch=0
         else
-            len_branch=$((${#name_branch} + 1))
+            readonly len_branch=$((${#name_branch} + 1))
         fi
         len_dir=$((${len_var} - ${len_branch}))
     else
-        len_branch=${len_branch_max}
+        readonly len_branch=${len_branch_max}
     fi
+    readonly len_dir
     trunc tail ${len_dir} "${name_dir}"
     printf '%s' "${trunc_out_ellipsis}"
     print_ansi '1;34'
