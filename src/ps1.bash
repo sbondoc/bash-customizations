@@ -26,24 +26,9 @@ trunc()
     unset str
 }
 
-print_color()
+print_ansi()
 {
-    printf '\['
-    case ${1} in
-    (red)
-        printf '\e[31m'
-    ;;
-    (green)
-        printf '\e[32m'
-    ;;
-    (bblue)
-        printf '\e[1;34m'
-    ;;
-    (none)
-        printf '\e[00m'
-    ;;
-    esac
-    printf '\]'
+    printf '%s\e[%sm%s' "${BASH+\[}" "${1}" "${BASH+\]}"
 }
 
 main()
@@ -79,23 +64,23 @@ main()
     fi
     trunc tail ${len_dir} "${name_dir}"
     printf '%s' "${trunc_out_ellipsis}"
-    print_color bblue
+    print_ansi '1;34'
     printf '%s' "${trunc_out}"
-    print_color none
+    print_ansi '0'
     if [ ${len_branch} -gt 0 ]
     then
         printf ':'
         trunc head $((${len_branch} - 1)) ${name_branch}
         case "${PS1}" in
         ('\\[\\e[31m\\]'*)
-            print_color red
+            print_ansi '31'
         ;;
         ('\\[\\e[32m\\]'*)
-            print_color green
+            print_ansi '32'
         ;;
         esac
         printf '%s' "${trunc_out}"
-        print_color none
+        print_ansi '0'
         printf '%s' "${trunc_out_ellipsis}"
     fi
     printf '$ '
