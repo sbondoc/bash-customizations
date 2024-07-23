@@ -35,10 +35,11 @@ main()
 {
     len_var=$((${1} - 2))
     len_dir_max=$((${len_var} / 2))
-    name_dir="${PWD#${HOME}}"
-    if [ ${#PWD} -ne ${#name_dir} ]
+    if [ "${PWD}" = "${PWD#${HOME}}" ]
     then
-        name_dir="~${name_dir}"
+        name_dir="${PWD}"
+    else
+        name_dir="~${PWD#${HOME}}"
     fi
     if [ ${#name_dir} -le ${len_dir_max} ]
     then
