@@ -89,7 +89,9 @@ main()
     readonly len_branch_max=$((${len_var} - ${len_dir}))
     unset __git_ps1_branch_name
     __git_ps1 '' '' '%s'
-    readonly name_branch=${__git_ps1_branch_name}
+    name_branch=${__git_ps1_branch_name#(}
+    name_branch=${name_branch%)}
+    readonly name_branch=${name_branch%...}
     if [ $((${#name_branch} + 1)) -le ${len_branch_max} ]
     then
         if [ -z ${name_branch} ]
