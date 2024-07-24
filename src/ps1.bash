@@ -31,6 +31,45 @@ print_ansi()
     printf '%s\e[%sm%s' "${BASH+\[}" "${1}" "${BASH+\]}"
 }
 
+print_git_color()
+{
+    case "${PS1}" in
+    (*\|MERGING*)
+        print_ansi '31'
+        return
+    ;;
+    (*\|REBASE*)
+        print_ansi '31'
+        return
+    ;;
+    (*\|AM*)
+        print_ansi '31'
+        return
+    ;;
+    (*\|AM/REBASE*)
+        print_ansi '31'
+        return
+    ;;
+    (*\|REVERTING*)
+        print_ansi '31'
+        return
+    ;;
+    (*\|CHERRY-PICKING*)
+        print_ansi '31'
+        return
+    ;;
+    (*\|BISECTING*)
+        print_ansi '31'
+        return
+    ;;
+    ('\\[\\e[31m\\]'*)
+        print_ansi '33'
+        return
+    ;;
+    esac
+    print_ansi '32'
+}
+
 main()
 {
     readonly len_var=$((${1} - 2))
@@ -73,14 +112,7 @@ main()
     then
         printf ':'
         trunc head $((${len_branch} - 1)) ${name_branch}
-        case "${PS1}" in
-        ('\\[\\e[31m\\]'*)
-            print_ansi '31'
-        ;;
-        ('\\[\\e[32m\\]'*)
-            print_ansi '32'
-        ;;
-        esac
+        print_git_color
         printf '%s' "${trunc_out}"
         print_ansi '0'
         printf '%s' "${trunc_out_ellipsis}"
