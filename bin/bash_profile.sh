@@ -5,4 +5,5 @@ done 0<<-EOF
 	src/xdg.sh
 	lib/.bashrc
 	src/prompt.sh
+	src/misc.sh
 EOF
