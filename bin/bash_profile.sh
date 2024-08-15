@@ -4,5 +4,5 @@ do
 done 0<<EOF
 src/xdg.sh
 lib/.bashrc
-src/prompt.bash
+src/prompt.sh
 EOF
