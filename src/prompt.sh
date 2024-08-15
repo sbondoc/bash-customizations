@@ -4,4 +4,4 @@ then
 fi
 
 export GIT_PS1_SHOWCOLORHINTS=true
-PS1="\$($(cat "${XDG_CONFIG_HOME}/bash/src/ps1.bash"))"
+PS1="\$($(cat "${XDG_CONFIG_HOME}/bash/src/ps1.sh"))"
