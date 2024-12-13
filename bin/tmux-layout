@@ -1,0 +1,159 @@
+#!/bin/sh
+
+readonly dir_layouts_default="${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/layouts"
+readonly exit_error=1
+readonly exit_success=0
+
+print_usage()
+{
+	printf 'Usage:\n%s\n%s\n' \
+	  'tmux-layout save|load|delete <layout_name>' \
+	  'tmux-layout list'
+}
+
+print_err()
+{
+	printf 'error: ' 1>&2
+	printf "$@" 1>&2
+}
+
+exit_file_exists()
+{
+	print_err 'file `%s\047 already exists\n' "${1}"
+	exit ${exit_error}
+}
+
+exit_bad_directory()
+{
+	print_err 'invalid layout directory `%s\047\n' "${1}"
+	exit ${exit_error}
+}
+
+exit_bad_file()
+{
+	print_err 'invalid file `%s\047\n' "${1}"
+	exit ${exit_error}
+}
+
+exit_bad_usage()
+{
+	print_usage 1>&2
+	exit ${exit_error}
+}
+
+exit_help()
+{
+	print_usage
+	exit ${exit_success}
+}
+
+parse_args()
+{
+	unset operation
+	unset dir_layouts
+	while getopts ':d:h' opt
+	do
+		case ${opt} in
+		(d)
+			dir_layouts="${OPTARG}"
+		;;
+		(h)
+			exit_help
+		;;
+		(?)
+			exit_bad_usage
+		;;
+		esac
+	done
+	shift $((OPTIND - 1))
+	readonly dir_layouts="${dir_layouts:-${dir_layouts_default}}"
+	if [ ! -d "${dir_layouts}" ]
+	then
+		exit_bad_directory "${dir_layouts}"
+	fi
+	readonly operation="${1}"
+	case "${operation}" in
+	(save|load|delete)
+		if [ $# -ne 2 ]
+		then
+			exit_bad_usage
+		fi
+		readonly file_layout="${dir_layouts}/${2}"
+	;;
+	(list)
+		if [ $# -ne 1 ]
+		then
+			exit_bad_usage
+		fi
+	;;
+	(*)
+		exit_bad_usage
+	;;
+	esac
+	if [ ${operation} = save ]
+	then
+		if [ -f "${file_layout}" ]
+		then
+			exit_file_exists "${file_layout}"
+		fi
+	fi
+	case ${operation} in
+	(load|delete)
+		if [ ! -f "${file_layout}" ]
+		then
+			exit_bad_file "${file_layout}"
+		fi
+	;;
+	esac
+}
+
+save_layout()
+{
+	readonly format='#{window_panes} #{window_layout}'
+	tmux display-message -p "${format}" 1>"${file_layout}"
+}
+
+load_layout()
+{
+	readonly data_layout="$(cat "${file_layout}")"
+	readonly count_panes="${data_layout%% *}"
+	readonly layout_panes="${data_layout##* }"
+	tmux kill-pane -a
+	i=0
+	while [ $(( i += 1 )) -lt ${count_panes} ]
+	do
+		tmux split-window -c "${PWD}"
+	done
+	tmux select-layout "${layout_panes}"
+}
+
+delete_layout()
+{
+	rm "${file_layout}"
+}
+
+list_layouts()
+{
+	ls "${dir_layouts}"
+}
+
+main()
+{
+	parse_args "$@"
+	case ${operation} in
+	(save)
+		save_layout
+	;;
+	(load)
+		load_layout
+	;;
+	(delete)
+		delete_layout
+	;;
+	(list)
+		list_layouts
+	;;
+	esac
+}
+
+main "$@"
