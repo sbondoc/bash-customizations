@@ -74,11 +74,12 @@ main()
 {
 	readonly len_var=$((${1} - 2))
 	readonly len_dir_max=$((${len_var} / 2))
-	if [ "${PWD}" = "${PWD#${HOME}}" ]
+	name_dir="$(pwd -P)"
+	if [ "${name_dir}" = "${name_dir#${HOME}}" ]
 	then
-		readonly name_dir="${PWD}"
+		readonly name_dir
 	else
-		readonly name_dir="~${PWD#${HOME}}"
+		readonly name_dir="~${name_dir#${HOME}}"
 	fi
 	if [ ${#name_dir} -le ${len_dir_max} ]
 	then
